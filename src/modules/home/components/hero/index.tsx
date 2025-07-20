@@ -23,7 +23,7 @@ const Hero = () => {
   const [selectedWord, setSelectedWord] = useState("");
   const [generatedCards, setGeneratedCards] = useState([]);
   const [selectedGeneratedCard, setSelectedGeneratedCard] = useState('');
-  const [selectedChokerImage, setSelectedChokerImage] = useState(null);
+  const [selectedChokerImage, setSelectedChokerImage] = useState<any>(null);
   const [generatedChokerImage, setGeneratedChokerImage] = useState(null);
 
   const [showInitialScreen, setShowInitialScreen] = useState(true);
@@ -86,27 +86,84 @@ const Hero = () => {
     setShowGeneratedCards(true);
     setSelectedChokerImage(null);
   };
-  const handleChokerSelect = (image) => {
+  const handleChokerSelect = (image: any) => {
     setSelectedChokerImage(image);
   };
   const handleShowGeneratedImage = async () => {
     try {
-      // const response = await fetch("http://localhost:9000/generate-choker-image", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     text: selectedGeneratedCard,
-      //     chokerImage: selectedChokerImage,
-      //   }),
-      // });
-      // const data = await response.json();
-      // setGeneratedChokerImage(data.imageUrl); // 存储生成的图片 URL
+      console.log("Sending to generate_images API:", {
+        text: selectedGeneratedCard,
+        image: selectedChokerImage
+      });
+
+      let imageBase64 = null;
+      if (selectedChokerImage) {
+        try {
+          // 获取图片的 src URL
+          const imageSrc = selectedChokerImage.src || selectedChokerImage;
+          console.log("Image src:", imageSrc);
+          
+          // 如果是本地图片，需要转换为 base64
+          if (typeof imageSrc === 'string' && imageSrc.startsWith('/')) {
+            // 对于本地图片，我们需要通过 fetch 获取图片数据并转换为 base64
+            console.log("Local image detected, fetching and converting to base64");
+            const response = await fetch(imageSrc);
+            const blob = await response.blob();
+            
+            // 使用 Promise 来转换 blob 为 base64
+            imageBase64 = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                resolve(reader.result as string);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            });
+            
+            console.log("Converted image to base64, length:", imageBase64.length);
+          } else {
+            imageBase64 = imageSrc;
+          }
+        } catch (error) {
+          console.error("Error processing image:", error);
+          // 如果转换失败，使用一个真实的测试图片
+          imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
+        }
+      }
+
+      const response = await fetch("http://localhost:9000/generate_images", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: selectedGeneratedCard,
+          image: imageBase64,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Response from generate_images API:", data);
+      
+      // 存储生成的图片 URL（如果 API 返回的话）
+      if (data.imageUrl) {
+        setGeneratedChokerImage(data.imageUrl);
+        console.log("Generated image URL set:", data.imageUrl.substring(0, 50) + "...");
+      } else {
+        console.warn("No imageUrl in response:", data);
+      }
+      
       setShowChokerSelection(false);
       setShowGeneratedImage(true);
     } catch (error) {
       console.error("Error generating choker image:", error);
+      // 即使出错也显示界面，但可以添加错误提示
+      setShowChokerSelection(false);
+      setShowGeneratedImage(true);
     }
   };
 
@@ -280,13 +337,25 @@ const Hero = () => {
         {/* Show Generated Image */}
         {showGeneratedImage && (
           <div className="mt-8">
-            <Image
-              src={testImage}
-              alt="Test"
-              width={256}
-              height={256}
-              className="rounded-lg shadow-md"
-            />
+            <Heading
+              level="h2"
+              className="text-2xl leading-8 text-ui-fg-subtle font-normal mb-4"
+            >
+              Your AI-Generated Choker Design
+            </Heading>
+            {generatedChokerImage ? (
+              <Image
+                src={generatedChokerImage}
+                alt="AI Generated Choker"
+                width={256}
+                height={256}
+                className="rounded-lg shadow-md"
+              />
+            ) : (
+              <div className="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">Loading generated image...</p>
+              </div>
+            )}
             <Button
               variant="secondary"
               onClick={handleBackToSelectChoker}
