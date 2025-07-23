@@ -25,6 +25,7 @@ const Hero = () => {
   const [selectedGeneratedCard, setSelectedGeneratedCard] = useState('');
   const [selectedChokerImage, setSelectedChokerImage] = useState<any>(null);
   const [generatedChokerImage, setGeneratedChokerImage] = useState(null);
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
 
   const [showInitialScreen, setShowInitialScreen] = useState(true);
   const [showAttributes, setShowAttributes] = useState(false);
@@ -44,7 +45,8 @@ const Hero = () => {
   // Select Your Attribute
   const handleGenerateTextRequest = async () => {
     try {
-      const response = await fetch("http://localhost:9000/gpt", {
+      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/gpt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,6 +92,9 @@ const Hero = () => {
     setSelectedChokerImage(image);
   };
   const handleShowGeneratedImage = async () => {
+    setIsLoadingImage(true);
+    setShowChokerSelection(false);
+    setShowGeneratedImage(true);
     try {
       console.log("Sending to generate_images API:", {
         text: selectedGeneratedCard,
@@ -102,14 +107,12 @@ const Hero = () => {
           // 获取图片的 src URL
           const imageSrc = selectedChokerImage.src || selectedChokerImage;
           console.log("Image src:", imageSrc);
-          
           // 如果是本地图片，需要转换为 base64
           if (typeof imageSrc === 'string' && imageSrc.startsWith('/')) {
             // 对于本地图片，我们需要通过 fetch 获取图片数据并转换为 base64
             console.log("Local image detected, fetching and converting to base64");
             const response = await fetch(imageSrc);
             const blob = await response.blob();
-            
             // 使用 Promise 来转换 blob 为 base64
             imageBase64 = await new Promise<string>((resolve, reject) => {
               const reader = new FileReader();
@@ -119,7 +122,6 @@ const Hero = () => {
               reader.onerror = reject;
               reader.readAsDataURL(blob);
             });
-            
             console.log("Converted image to base64, length:", imageBase64.length);
           } else {
             imageBase64 = imageSrc;
@@ -130,8 +132,8 @@ const Hero = () => {
           imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
         }
       }
-
-      const response = await fetch("http://localhost:9000/generate_images", {
+      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
+      const response = await fetch(`${backendUrl}/generate_images`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,14 +143,11 @@ const Hero = () => {
           image: imageBase64,
         }),
       });
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
       console.log("Response from generate_images API:", data);
-      
       // 存储生成的图片 URL（如果 API 返回的话）
       if (data.imageUrl) {
         setGeneratedChokerImage(data.imageUrl);
@@ -156,14 +155,11 @@ const Hero = () => {
       } else {
         console.warn("No imageUrl in response:", data);
       }
-      
-      setShowChokerSelection(false);
-      setShowGeneratedImage(true);
     } catch (error) {
       console.error("Error generating choker image:", error);
       // 即使出错也显示界面，但可以添加错误提示
-      setShowChokerSelection(false);
-      setShowGeneratedImage(true);
+    } finally {
+      setIsLoadingImage(false);
     }
   };
 
@@ -343,7 +339,11 @@ const Hero = () => {
             >
               Your AI-Generated Choker Design
             </Heading>
-            {generatedChokerImage ? (
+            {isLoadingImage ? (
+              <div className="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">Loading generated image...</p>
+              </div>
+            ) : generatedChokerImage ? (
               <Image
                 src={generatedChokerImage}
                 alt="AI Generated Choker"
@@ -353,7 +353,7 @@ const Hero = () => {
               />
             ) : (
               <div className="w-64 h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Loading generated image...</p>
+                <p className="text-gray-500">No image generated.</p>
               </div>
             )}
             <Button
