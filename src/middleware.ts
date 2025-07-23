@@ -5,6 +5,9 @@ const BACKEND_URL = process.env.MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
+console.log("MEDUSA_BACKEND_URL:", process.env.MEDUSA_BACKEND_URL)
+console.log("NEXT_PUBLIC_DEFAULT_REGION:", process.env.NEXT_PUBLIC_DEFAULT_REGION)
+
 const regionMapCache = {
   regionMap: new Map<string, HttpTypes.StoreRegion>(),
   regionMapUpdated: Date.now(),
