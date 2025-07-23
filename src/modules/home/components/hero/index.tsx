@@ -45,8 +45,7 @@ const Hero = () => {
   // Select Your Attribute
   const handleGenerateTextRequest = async () => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
-      const response = await fetch(`${backendUrl}/gpt`, {
+      const response = await fetch(`https://api.chokerlab.com/gpt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -132,8 +131,7 @@ const Hero = () => {
           imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
         }
       }
-      const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
-      const response = await fetch(`${backendUrl}/generate_images`, {
+      const response = await fetch(`https://api.chokerlab.com/generate_images`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
