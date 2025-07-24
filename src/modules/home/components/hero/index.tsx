@@ -6,10 +6,10 @@ import { Button, Heading } from "@medusajs/ui";
 import choker1 from "../../../../image/choker1.jpg";
 import choker2 from "../../../../image/choker2.jpg";
 import choker3 from "../../../../image/choker3.jpg";
-import testImage from "../../../../image/chokerresult.jpg";
 
 const commonWords = ["Dominance", "Submission", "Masochism", "Pleasure", "Control", "Freedom", "Intensity", "Desire"];
 const chokerImages = [choker1, choker2, choker3];
+const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 
 /*
 Choker Design Workflow
@@ -45,7 +45,7 @@ const Hero = () => {
   // Select Your Attribute
   const handleGenerateTextRequest = async () => {
     try {
-      const response = await fetch(`https://api.chokerlab.com/gpt`, {
+      const response = await fetch(`${BACKEND_URL}/gpt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ const Hero = () => {
           imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
         }
       }
-      const response = await fetch(`https://api.chokerlab.com/generate_images`, {
+      const response = await fetch(`${BACKEND_URL}/generate_images`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
