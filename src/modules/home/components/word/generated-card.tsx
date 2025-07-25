@@ -36,13 +36,13 @@ export default function GeneratedCardPage() {
         </div>
         <div className="flex gap-6 mt-2">
           <button
-            className="bg-gray-500 hover:bg-gray-700 text-white py-3 px-7 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all text-base"
+            className="bg-gray-500 hover:bg-gray-700 text-white sm:py-3 py-2 sm:px-7 px-4 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all sm:text-base text-sm"
             onClick={() => window.history.back()}
           >
             <i className="fa-solid fa-arrow-left"></i> Go Back
           </button>
           <button
-            className="bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white py-4 px-10 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all text-lg animate__animated animate__tada"
+            className="bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white sm:py-4 py-2 sm:px-10 px-4 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all sm:text-lg text-base animate__animated animate__tada"
             style={{ boxShadow: '0 4px 18px rgba(124,58,237,0.13)' }}
             onMouseEnter={e => e.currentTarget.classList.add('animate__pulse')}
             onMouseLeave={e => e.currentTarget.classList.remove('animate__pulse')}
