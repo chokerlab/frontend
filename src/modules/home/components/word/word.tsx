@@ -47,7 +47,7 @@ export default function PageWords() {
     <div className="flex flex-col items-center w-full max-w-lg mx-auto bg-white bg-opacity-90 rounded-3xl shadow-xl px-8 py-10 mt-16">
       <div className="flex items-center gap-3 mb-8 w-full">
         <i className="fa-solid fa-quote-left text-3xl text-[#7c3aed]"></i>
-        <span className="text-2xl md:text-3xl font-extrabold text-[#7c3aed]">2. Choose Your Vibe & Input Your Words</span>
+        <span className="text-2xl md:text-3xl font-extrabold text-[#7c3aed]">1. Choose Your Vibe & Input Your Words</span>
       </div>
       <div className="flex flex-wrap justify-center gap-4 mb-8 w-full">
         {commonWords.map((word) => (
