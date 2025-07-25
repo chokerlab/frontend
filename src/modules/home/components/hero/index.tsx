@@ -174,21 +174,24 @@ const Hero = () => {
 
         {/* Initial Page */}
         {showInitialScreen && (
-          <>
-            <Heading level="h1" className="text-3xl leading-10 text-ui-fg-base font-normal">
-              Craft Your Unique Story with AI
-            </Heading>
-            <Heading level="h2" className="text-2xl leading-8 text-ui-fg-subtle font-normal">
-              Let AI transform your words into art, engraved forever.
-            </Heading>
+          <div className="flex flex-col items-center justify-center py-16 w-full">
+            <div className="mb-6 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full w-24 h-24 flex items-center justify-center shadow-lg">
+              <img src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo_with_bg.png" alt="ChokerLab Logo" className="w-14 h-14 object-contain" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
+              Customize Your Choker with AI
+            </h1>
+            <p className="text-lg md:text-xl text-gray-500 mb-8 text-center max-w-xl">
+              Let AI turn your inspiration, attitude, and story into art—engraved on a choker, making your style truly unique.
+            </p>
             <Button
               variant="primary"
               onClick={handleDesignNowClick}
-              className="mt-6 py-2 px-6 bg-gradient-to-r from-pink-500 to-purple-500 shadow-lg text-white"
+              className="py-3 px-8 bg-gradient-to-r from-purple-400 to-pink-400 shadow-lg text-white font-bold text-lg"
             >
-              Design Now
+              <i className="fa-solid fa-wand-magic-sparkles mr-2"></i> Start Customizing
             </Button>
-          </>
+          </div>
         )}
 
         {/* Select BDSM Attributes & User Input */}

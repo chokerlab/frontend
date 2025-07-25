@@ -22,9 +22,14 @@ export default async function Nav() {
           <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase flex items-center gap-2"
               data-testid="nav-store-link"
             >
+              <img
+                src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo.png"
+                alt="ChokerLab Logo"
+                className="h-7 sm:h-9 md:h-11 max-w-full"
+              />
               ChokerLab
             </LocalizedClientLink>
           </div>
