@@ -170,27 +170,29 @@ const Hero = () => {
 
   return (
     <div className="h-[75vh] w-full border-b border-ui-border-base relative bg-ui-bg-subtle">
-      <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center small:p-32 gap-6">
+      <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center small:p-32 gap-6" style={{ background: 'linear-gradient(135deg, #ede9fe 0%, #f7f7fa 100%)' }}>
 
         {/* Initial Page */}
         {showInitialScreen && (
-          <div className="flex flex-col items-center justify-center py-16 w-full">
-            <div className="mb-6 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full w-24 h-24 flex items-center justify-center shadow-lg">
-              <img src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo_with_bg.png" alt="ChokerLab Logo" className="w-14 h-14 object-contain" />
+          <div className="w-full flex flex-col items-center justify-center py-24 min-h-[80vh]">
+            <div className="flex flex-col items-center justify-center px-8 py-12 rounded-3xl shadow-xl bg-white bg-opacity-80" style={{ maxWidth: 480, width: '100%' }}>
+              <div className="mb-8">
+                <img src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo_with_bg.jpg" alt="ChokerLab Logo" className="w-32 h-32 object-contain rounded-full mb-8" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-center bg-gradient-to-r from-purple-500 via-pink-400 to-pink-500 bg-clip-text text-transparent">
+                Make Your Statement. Wear Your Story.
+              </h1>
+              <p className="text-lg md:text-xl mb-10 text-center max-w-xl text-gray-400">
+                Design a choker that's as bold as you are — powered by AI, engraved with your vibe, and made for your style.
+              </p>
+              <button
+                onClick={handleDesignNowClick}
+                className="py-3 px-10 rounded-lg font-bold text-lg text-white shadow-lg bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-200 transform hover:scale-105 hover:from-purple-500 hover:to-pink-500 focus:outline-none"
+                style={{ backgroundImage: 'linear-gradient(90deg, #a78bfa 0%, #f472b6 100%)' }}
+              >
+                <i className="fa-solid fa-wand-magic-sparkles mr-2 align-middle" style={{ fontSize: '1.5em', verticalAlign: 'middle' }}></i> Design Now
+              </button>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 text-center">
-              Customize Your Choker with AI
-            </h1>
-            <p className="text-lg md:text-xl text-gray-500 mb-8 text-center max-w-xl">
-              Let AI turn your inspiration, attitude, and story into art—engraved on a choker, making your style truly unique.
-            </p>
-            <Button
-              variant="primary"
-              onClick={handleDesignNowClick}
-              className="py-3 px-8 bg-gradient-to-r from-purple-400 to-pink-400 shadow-lg text-white font-bold text-lg"
-            >
-              <i className="fa-solid fa-wand-magic-sparkles mr-2"></i> Start Customizing
-            </Button>
           </div>
         )}
 
