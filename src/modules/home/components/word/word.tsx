@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setCards } from '@modules/home/store/generatedCardsSlice';
 
 const commonWords = [
   "Dominance",
@@ -17,9 +19,28 @@ export default function PageWords() {
   const [selectedWord, setSelectedWord] = useState("");
   const [userInput, setUserInput] = useState("");
   const router = useRouter();
+  const params = useParams();
+  const countryCode = params.countryCode;
+  const dispatch = useDispatch();
+  const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 
-  const handleGenerate = () => {
-    router.push('/customize/generated_card');
+  const handleGenerate = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/gpt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selected_word: selectedWord,
+          user_input: userInput,
+        }),
+      });
+      const data = await response.json();
+      const textArray = data.message;
+      dispatch(setCards(textArray));
+      router.push(`/${countryCode}/customize/generated-card`);
+    } catch (error) {
+      console.error("Error generating text:", error);
+    }
   };
 
   return (

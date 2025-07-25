@@ -6,7 +6,7 @@ import { Button, Heading } from "@medusajs/ui";
 import choker1 from "../../../../image/choker1.jpg";
 import choker2 from "../../../../image/choker2.jpg";
 import choker3 from "../../../../image/choker3.jpg";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const commonWords = ["Dominance", "Submission", "Masochism", "Pleasure", "Control", "Freedom", "Intensity", "Desire"];
 const chokerImages = [choker1, choker2, choker3];
@@ -38,8 +38,10 @@ const Hero = () => {
   Button Handlers
    */
   // Initial Screen
+  const params = useParams();
+  const countryCode = params.countryCode;
   const handleDesignNowClick = () => {
-    router.push("/customize/words");
+    router.push(`/${countryCode}/customize/words`);
   };
 
   // Select Your Attribute
