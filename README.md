@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://www.chokerlab.com">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo.png">
-    <img alt="ChokerLab logo" src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo.png" style="max-width: 200px; width: 100%;">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo/no_background.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo/no_background.jpg">
+    <img alt="ChokerLab logo" src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo/no_background.jpg" style="max-width: 200px; width: 100%;">
     </picture>
   </a>
 </p>
