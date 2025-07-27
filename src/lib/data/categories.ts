@@ -23,7 +23,16 @@ export const listCategories = async (query?: Record<string, any>) => {
         cache: "force-cache",
       }
     )
-    .then(({ product_categories }) => product_categories)
+    // .then(({ product_categories }) => product_categories), to enable all categories
+    .then(({ product_categories }) => {
+      // Filter to only show "Shirts" category and rename it to "Choker"
+      return product_categories
+        .filter(category => category.name === "Shirts")
+        .map(category => ({
+          ...category,
+          name: "Choker"
+        }))
+    })
 }
 
 export const getCategoryByHandle = async (categoryHandle: string[]) => {
