@@ -4,6 +4,8 @@ import { Text, clx } from "@medusajs/ui"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MedusaCTA from "@modules/layout/components/medusa-cta"
+import Twitter from "@modules/common/icons/twitter"
+import Email from "@modules/common/icons/email"
 
 export default async function Footer() {
   const { collections } = await listCollections({
@@ -109,36 +111,26 @@ export default async function Footer() {
               </div>
             )}
             <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
+              <span className="txt-small-plus txt-ui-fg-base">Social</span>
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
                 <li>
                   <a
-                    href="https://github.com/medusajs"
+                    href="https://twitter.com/ChokerLab"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                    className="hover:text-ui-fg-base flex items-center gap-x-2"
                   >
-                    GitHub
+                    <Twitter size="16" />
+                    Twitter
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                    href="mailto:support@chokerlab.com"
+                    className="hover:text-ui-fg-base flex items-center gap-x-2"
                   >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
+                    <Email size="16" />
+                    Support
                   </a>
                 </li>
               </ul>
