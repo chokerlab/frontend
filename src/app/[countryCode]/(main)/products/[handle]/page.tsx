@@ -61,7 +61,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const product = await listProducts({
     countryCode: params.countryCode,
-    queryParams: { handle },
+    queryParams: { handle } as any,
   }).then(({ response }) => response.products[0])
 
   if (!product) {
@@ -81,20 +81,35 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ProductPage(props: Props) {
   const params = await props.params
+  
+  // 打印页面参数
+  console.log("=== ProductPage 页面参数 ===")
+  console.log("params:", params)
+  console.log("countryCode:", params.countryCode)
+  console.log("handle:", params.handle)
+  
   const region = await getRegion(params.countryCode)
 
   if (!region) {
+    console.log("=== 没有找到对应的 region ===")
     notFound()
   }
+
+  console.log("=== 找到的 region ===")
+  console.log("region:", region)
 
   const pricedProduct = await listProducts({
     countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
+    queryParams: { handle: params.handle } as any,
   }).then(({ response }) => response.products[0])
 
   if (!pricedProduct) {
+    console.log("=== 没有找到产品 ===")
     notFound()
   }
+
+  console.log("=== 找到的产品 ===")
+  console.log("pricedProduct:", pricedProduct)
 
   return (
     <ProductTemplate
