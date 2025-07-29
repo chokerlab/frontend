@@ -39,7 +39,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         </div>
         <div className="block w-full relative flex flex-col items-center">
           <div className="max-w-[540px] w-full mx-auto">
-            <EngraveBox images={product?.images || []} />
+            <EngraveBox images={product?.images || []} imageUrl={product?.images?.[0]?.url} />
           </div>
         </div>
         <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">

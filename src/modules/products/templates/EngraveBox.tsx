@@ -5,9 +5,10 @@ import { HttpTypes } from "@medusajs/types";
 
 type EngraveBoxProps = {
   images: HttpTypes.StoreProductImage[];
+  imageUrl?: string;
 };
 
-const EngraveBox: React.FC<EngraveBoxProps> = ({ images }) => {
+const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
   const [engraveText, setEngraveText] = useState("");
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -15,6 +16,10 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images }) => {
       if (saved) setEngraveText(saved);
     }
   }, []);
+
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [resultImage, setResultImage] = useState<string | null>(null);
 
   const mainImage = images && images.length > 0 ? images[0].url : undefined;
 
@@ -50,12 +55,176 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images }) => {
         <button
           className="w-full py-3 bg-gray-900 text-white rounded-lg font-semibold text-lg shadow-md hover:bg-gray-800 transition-all tracking-wide"
           style={{marginTop: 0}}
+          onClick={async () => {
+            setShowModal(true);
+            setLoading(true);
+            setResultImage(null);
+            try {
+              const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
+              const response = await fetch(`${BACKEND_URL}/generate_images`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: engraveText, imageUrl }),
+              });
+              const data = await response.json();
+              setResultImage(data.imageUrl);
+            } catch (error) {
+              setResultImage(null);
+            } finally {
+              setLoading(false);
+            }
+          }}
         >
           Finalize Your Design
         </button>
       </div>
+      {/* Modal (悬浮窗) */}
+      {showModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(10, 10, 20, 0.72)',
+            backdropFilter: 'blur(14px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 1000
+          }}
+        >
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #fff 80%, #f3f3fa 100%)',
+              borderRadius: 48,
+              boxShadow: '0 12px 48px 0 rgba(31, 38, 135, 0.22)',
+              padding: 64,
+              minWidth: 520,
+              minHeight: 520,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'relative',
+              // no border
+            }}
+          >
+            {/* Premium close button */}
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                position: 'absolute',
+                top: 28,
+                right: 28,
+                background: 'rgba(255,255,255,0.7)',
+                border: 'none',
+                borderRadius: '50%',
+                width: 54,
+                height: 54,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+                transition: 'background 0.2s',
+                backdropFilter: 'blur(2px)',
+              }}
+              aria-label="Close"
+            >
+              <svg width="28" height="28" viewBox="0 0 18 18">
+                <line x1="4" y1="4" x2="14" y2="14" stroke="#444" strokeWidth="2.5" strokeLinecap="round"/>
+                <line x1="14" y1="4" x2="4" y2="14" stroke="#444" strokeWidth="2.5" strokeLinecap="round"/>
+              </svg>
+            </button>
+            {loading ? (
+              <>
+                <div style={{margin: '100px 0 48px 0'}}>
+                  <span className="loader" style={{
+                    display: 'inline-block',
+                    width: 90,
+                    height: 90,
+                    border: '10px solid #e6e6ef',
+                    borderTop: '10px solid #b7b7e6',
+                    borderRadius: '50%',
+                    animation: 'spin 1.3s cubic-bezier(.68,-0.55,.27,1.55) infinite'
+                  }} />
+                </div>
+                <div style={{
+                  color: '#23223a',
+                  fontSize: 28,
+                  fontWeight: 700,
+                  letterSpacing: 0.5,
+                  textAlign: 'center',
+                  fontFamily: 'inherit',
+                  opacity: 0.92,
+                  marginBottom: 12
+                }}>
+                  Creating your luxury choker...
+                </div>
+              </>
+            ) : resultImage ? (
+              <>
+                <div style={{
+                  background: 'rgba(255,255,255,0.98)',
+                  borderRadius: 32,
+                  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.13)',
+                  padding: 24,
+                  marginBottom: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <img
+                    src={resultImage}
+                    alt="Generated"
+                    style={{
+                      maxWidth: 400,
+                      maxHeight: 400,
+                      borderRadius: 24,
+                      boxShadow: '0 6px 32px rgba(0,0,0,0.13)',
+                      border: '8px solid #fff',
+                    }}
+                  />
+                </div>
+                <div style={{
+                  color: '#3a2e4f',
+                  fontSize: 28,
+                  fontWeight: 800,
+                  marginBottom: 8,
+                  textAlign: 'center',
+                  fontFamily: `'Playfair Display', 'Georgia', 'Times New Roman', serif`,
+                  letterSpacing: 0.5,
+                  lineHeight: 1.35,
+                  textShadow: '0 2px 8px rgba(58,46,79,0.07)'
+                }}>
+                  Try wearing this choker.<br/>Make it yours today!
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{
+                  color: '#b00',
+                  fontSize: 24,
+                  fontWeight: 600,
+                  margin: '100px 0 48px 0',
+                  textAlign: 'center',
+                  fontFamily: 'inherit',
+                }}>
+                  Failed to generate image.
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+// loader 动画 keyframes
+if (typeof window !== 'undefined') {
+  if (!document.getElementById('modal-spin-keyframes')) {
+    const style = document.createElement('style');
+    style.id = 'modal-spin-keyframes';
+    style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }`;
+    document.head.appendChild(style);
+  }
+}
 
 export default EngraveBox; 
