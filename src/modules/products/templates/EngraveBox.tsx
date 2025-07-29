@@ -33,21 +33,22 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images }) => {
           </div>
         )}
       </div>
-      <div className="mt-6 w-full max-w-[540px] bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-        <label htmlFor="choker-engrave-text" className="block text-base font-medium text-gray-700 mb-2 w-full text-left">
-          Preview or edit your text below, then click the button to see it on your choker.
+      <div className="mt-6 w-full max-w-[540px] bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center border border-gray-200">
+        <label htmlFor="choker-engrave-text" className="block text-base font-semibold text-gray-800 mb-3 w-full text-left tracking-wide">
+          Preview or play with your text below,<br />
+          then hit the button to see your choker’s new vibe!
         </label>
         <input
           id="choker-engrave-text"
           type="text"
           maxLength={20}
           placeholder="Type your text here..."
-          className="w-full mb-4 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black text-lg"
+          className="w-full mb-6 px-4 py-3 border border-gray-300 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 text-lg text-gray-700 transition-all shadow-sm placeholder-gray-400"
           value={engraveText}
           onChange={e => setEngraveText(e.target.value)}
         />
         <button
-          className="w-full py-3 bg-black text-white rounded-md font-semibold text-lg hover:bg-gray-800 transition-colors"
+          className="w-full py-3 bg-gray-900 text-white rounded-lg font-semibold text-lg shadow-md hover:bg-gray-800 transition-all tracking-wide"
           style={{marginTop: 0}}
         >
           Finalize Your Design
