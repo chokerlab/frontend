@@ -22,6 +22,7 @@ const StoreTemplate = ({
     <div
       className="flex flex-col small:flex-row small:items-start py-6 content-container"
       data-testid="category-container"
+      style={{ background: 'linear-gradient(135deg, #ede9fe 0%, #f7f7fa 100%)', minHeight: '100vh', width: '100%' }}
     >
       <RefinementList sortBy={sort} />
       <div className="w-full">

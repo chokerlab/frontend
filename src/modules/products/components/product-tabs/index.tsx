@@ -87,12 +87,12 @@ const ShippingInfoTab = () => {
           <div>
             <span className="font-semibold">Fast delivery</span>
             <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
+              Free Delivery for everyone. Your package will arrive in 10-15 business days at your pick up
               location or in the comfort of your home.
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-x-2">
+        {/* <div className="flex items-start gap-x-2">
           <Refresh />
           <div>
             <span className="font-semibold">Simple exchanges</span>
@@ -101,15 +101,13 @@ const ShippingInfoTab = () => {
               product for a new one.
             </p>
           </div>
-        </div>
+        </div> */}
         <div className="flex items-start gap-x-2">
           <Back />
           <div>
-            <span className="font-semibold">Easy returns</span>
+            <span className="font-semibold">Return Policy</span>
             <p className="max-w-sm">
-              Just return your product and we&apos;ll refund your money. No
-              questions asked – we&apos;ll do our best to make sure your return
-              is hassle-free.
+              Kindly note that all engraved items are final and cannot be returned.
             </p>
           </div>
         </div>

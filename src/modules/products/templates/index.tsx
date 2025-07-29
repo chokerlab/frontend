@@ -10,6 +10,7 @@ import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-relat
 import { notFound } from "next/navigation"
 import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
+import EngraveBox from "./EngraveBox"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
@@ -36,8 +37,10 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
           <ProductInfo product={product} />
           <ProductTabs product={product} />
         </div>
-        <div className="block w-full relative">
-          <ImageGallery images={product?.images || []} />
+        <div className="block w-full relative flex flex-col items-center">
+          <div className="max-w-[540px] w-full mx-auto">
+            <EngraveBox images={product?.images || []} />
+          </div>
         </div>
         <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
           <ProductOnboardingCta />

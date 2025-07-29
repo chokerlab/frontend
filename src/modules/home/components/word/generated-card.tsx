@@ -173,7 +173,12 @@ export default function GeneratedCardPage() {
               style={{ boxShadow: '0 4px 18px rgba(124,58,237,0.13)' }}
               onMouseEnter={e => e.currentTarget.classList.add('animate__pulse')}
               onMouseLeave={e => e.currentTarget.classList.remove('animate__pulse')}
-              onClick={() => router.push(`/${countryCode}/store`)}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('selectedGeneratedCard', selected);
+                }
+                router.push(`/${countryCode}/store`)
+              }}
             >
               <i className="fa-solid fa-gem"></i> Select Your Choker
             </button>
