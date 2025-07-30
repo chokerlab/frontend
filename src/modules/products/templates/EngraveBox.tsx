@@ -78,7 +78,7 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
           Finalize Your Design
         </button>
       </div>
-      {/* Modal (悬浮窗) */}
+      {/* Modal */}
       {showModal && (
         <div
           style={{
@@ -95,9 +95,9 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
               background: 'linear-gradient(135deg, #fff 80%, #f3f3fa 100%)',
               borderRadius: 48,
               boxShadow: '0 12px 48px 0 rgba(31, 38, 135, 0.22)',
-              padding: 64,
-              minWidth: 520,
-              minHeight: 520,
+              padding: window.innerWidth <= 768 ? 40 : 64,
+              minWidth: window.innerWidth <= 768 ? 320 : 520,
+              minHeight: window.innerWidth <= 768 ? 420 : 520,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -110,13 +110,13 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
               onClick={() => setShowModal(false)}
               style={{
                 position: 'absolute',
-                top: 28,
-                right: 28,
+                top: window.innerWidth <= 768 ? 20 : 28,
+                right: window.innerWidth <= 768 ? 20 : 28,
                 background: 'rgba(255,255,255,0.7)',
                 border: 'none',
                 borderRadius: '50%',
-                width: 54,
-                height: 54,
+                width: window.innerWidth <= 768 ? 44 : 54,
+                height: window.innerWidth <= 768 ? 44 : 54,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -127,27 +127,27 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
               }}
               aria-label="Close"
             >
-              <svg width="28" height="28" viewBox="0 0 18 18">
+              <svg width={window.innerWidth <= 768 ? 22 : 28} height={window.innerWidth <= 768 ? 22 : 28} viewBox="0 0 18 18">
                 <line x1="4" y1="4" x2="14" y2="14" stroke="#444" strokeWidth="2.5" strokeLinecap="round"/>
                 <line x1="14" y1="4" x2="4" y2="14" stroke="#444" strokeWidth="2.5" strokeLinecap="round"/>
               </svg>
             </button>
             {loading ? (
               <>
-                <div style={{margin: '100px 0 48px 0'}}>
+                <div style={{margin: window.innerWidth <= 768 ? '60px 0 32px 0' : '100px 0 48px 0'}}>
                   <span className="loader" style={{
                     display: 'inline-block',
-                    width: 90,
-                    height: 90,
-                    border: '10px solid #e6e6ef',
-                    borderTop: '10px solid #b7b7e6',
+                    width: window.innerWidth <= 768 ? 70 : 90,
+                    height: window.innerWidth <= 768 ? 70 : 90,
+                    border: window.innerWidth <= 768 ? '8px solid #e6e6ef' : '10px solid #e6e6ef',
+                    borderTop: window.innerWidth <= 768 ? '8px solid #b7b7e6' : '10px solid #b7b7e6',
                     borderRadius: '50%',
                     animation: 'spin 1.3s cubic-bezier(.68,-0.55,.27,1.55) infinite'
                   }} />
                 </div>
                 <div style={{
                   color: '#23223a',
-                  fontSize: 28,
+                  fontSize: window.innerWidth <= 768 ? 22 : 28,
                   fontWeight: 700,
                   letterSpacing: 0.5,
                   textAlign: 'center',
@@ -164,8 +164,8 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
                   background: 'rgba(255,255,255,0.98)',
                   borderRadius: 32,
                   boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.13)',
-                  padding: 24,
-                  marginBottom: 32,
+                  padding: window.innerWidth <= 768 ? 16 : 24,
+                  marginBottom: window.innerWidth <= 768 ? 24 : 32,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -174,8 +174,8 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
                     src={resultImage}
                     alt="Generated"
                     style={{
-                      maxWidth: 400,
-                      maxHeight: 400,
+                      maxWidth: window.innerWidth <= 768 ? 280 : 400,
+                      maxHeight: window.innerWidth <= 768 ? 280 : 400,
                       borderRadius: 24,
                       boxShadow: '0 6px 32px rgba(0,0,0,0.13)',
                       border: '8px solid #fff',
@@ -184,7 +184,7 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
                 </div>
                 <div style={{
                   color: '#3a2e4f',
-                  fontSize: 28,
+                  fontSize: window.innerWidth <= 768 ? 22 : 28,
                   fontWeight: 800,
                   marginBottom: 8,
                   textAlign: 'center',
@@ -200,9 +200,9 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
               <>
                 <div style={{
                   color: '#b00',
-                  fontSize: 24,
+                  fontSize: window.innerWidth <= 768 ? 20 : 24,
                   fontWeight: 600,
-                  margin: '100px 0 48px 0',
+                  margin: window.innerWidth <= 768 ? '60px 0 32px 0' : '100px 0 48px 0',
                   textAlign: 'center',
                   fontFamily: 'inherit',
                 }}>
