@@ -20,7 +20,8 @@ export default function GeneratedCardPage() {
 
   // Generate background text elements from cards
   const generateBackgroundTexts = () => {
-    if (!isClient || !cards.length) return null;
+    return null;
+    // if (!isClient || !cards.length) return null;
 
     const backgroundTexts: React.JSX.Element[] = [];
     const positions = [
@@ -137,39 +138,55 @@ export default function GeneratedCardPage() {
       </div>
 
       <div className="relative z-10">
+        {/* Header */}
         <div className="flex items-center justify-center mb-4 mt-6">
           <span className="text-[2rem] text-[#a78bfa] mr-2" style={{ fontFamily: 'serif' }}>"</span>
           <span className="font-bold text-[2rem] text-[#a78bfa] leading-tight">
             2. Choose Your Card
           </span>
         </div>
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="flex flex-wrap justify-center gap-4 mt-6 mb-10">
+        
+        {/* Scroll Indicator */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <span className="text-[#9ca3af] text-sm">Swipe to see more</span>
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#d1d5db]"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#d1d5db]"></div>
+          </div>
+        </div>
+
+        {/* Cards Grid */}
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+          <div className="grid grid-cols-2 gap-3 w-full max-w-md mb-8">
             {cards.map((text, idx) => (
               <div
                 key={idx}
                 onClick={() => setSelected(text)}
-                className={`word-card px-7 py-3 rounded-xl cursor-pointer font-semibold text-lg transition-all shadow-sm border-2 flex items-center gap-3 min-w-[140px] relative
+                className={`card-item px-4 py-4 rounded-2xl cursor-pointer font-semibold text-sm transition-all shadow-sm border-2 flex items-center justify-center text-center min-h-[80px] relative
                   ${selected === text
                     ? 'selected bg-gradient-to-r from-purple-400 to-pink-400 text-white border-purple-400 animate-bounceIn scale-105'
-                    : 'bg-[#f3f0ff] text-[#7c3aed] border-[#e9d5ff] hover:scale-105 hover:-translate-y-1'}
+                    : 'bg-white text-[#7c3aed] border-[#e9d5ff] hover:scale-105 hover:-translate-y-1 hover:border-[#a78bfa]'}
                 `}
                 style={{ borderWidth: 2, borderStyle: 'solid', willChange: 'transform, box-shadow' }}
               >
-                <i className={`fa-solid fa-heart animate__animated ${selected === text ? 'animate__tada' : 'animate__pulse animate__infinite'} mr-1`} />
-                {text}
+                <div className="card-text font-semibold leading-tight">
+                  {text}
+                </div>
               </div>
             ))}
           </div>
-          <div className="flex gap-6 mt-2">
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 w-full max-w-md">
             <button
-              className="bg-gray-500 hover:bg-gray-700 text-white sm:py-3 py-2 sm:px-7 px-4 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all sm:text-base text-sm"
+              className="flex-1 bg-white hover:bg-gray-50 text-[#6b7280] border-2 border-[#e5e7eb] hover:border-[#a78bfa] hover:text-[#7c3aed] py-4 rounded-xl font-semibold shadow-sm flex items-center justify-center gap-2 transition-all text-base"
               onClick={() => window.history.back()}
             >
-              <i className="fa-solid fa-arrow-left"></i> Go Back
+              <i className="fa-solid fa-arrow-left"></i> Back
             </button>
             <button
-              className="bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white sm:py-4 py-2 sm:px-10 px-4 rounded-lg font-semibold shadow-md flex items-center gap-2 transition-all sm:text-lg text-base animate__animated animate__tada"
+              className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white py-4 rounded-xl font-semibold shadow-lg flex items-center justify-center gap-2 transition-all text-base animate__animated animate__tada"
               style={{ boxShadow: '0 4px 18px rgba(124,58,237,0.13)' }}
               onMouseEnter={e => e.currentTarget.classList.add('animate__pulse')}
               onMouseLeave={e => e.currentTarget.classList.remove('animate__pulse')}
@@ -180,30 +197,69 @@ export default function GeneratedCardPage() {
                 router.push(`/${countryCode}/store`)
               }}
             >
-              <i className="fa-solid fa-gem"></i> Select Your Choker
+              <i className="fa-solid fa-gem"></i> Continue
             </button>
           </div>
-          <style jsx>{`
-            .word-card.selected {
-              box-shadow: 0 4px 18px rgba(124,58,237,0.13), 0 0 16px #f472b6a0;
-              font-size: 1.15rem;
-              border: 2px solid #a78bfa;
-              background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
-              color: #fff;
-              transform: scale(1.08);
-            }
-            .word-card.selected .fa-heart {
-              color: #fff;
-              text-shadow: 0 2px 8px #f472b6;
-            }
-            .word-card .fa-heart {
-              color: #a78bfa;
-              font-size: 1.1em;
-              margin-right: 2px;
-              transition: color 0.2s;
-            }
-          `}</style>
         </div>
+
+        <style jsx>{`
+          .card-item.selected {
+            box-shadow: 0 8px 25px rgba(124,58,237,0.3);
+            font-size: 1.1rem;
+            border: 2px solid #7c3aed;
+            background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+            color: #fff;
+            transform: scale(1.02);
+          }
+          
+          .card-item.selected .card-text {
+            color: #fff;
+          }
+          
+          .card-item .card-text {
+            color: #7c3aed;
+            transition: color 0.2s;
+          }
+          
+          .card-item:hover {
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
+          }
+          
+          /* Animation for cards */
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .card-item {
+            animation: fadeInUp 0.6s ease forwards;
+          }
+          
+          .card-item:nth-child(1) { animation-delay: 0.1s; }
+          .card-item:nth-child(2) { animation-delay: 0.2s; }
+          .card-item:nth-child(3) { animation-delay: 0.3s; }
+          .card-item:nth-child(4) { animation-delay: 0.4s; }
+          .card-item:nth-child(5) { animation-delay: 0.5s; }
+          .card-item:nth-child(6) { animation-delay: 0.6s; }
+          .card-item:nth-child(7) { animation-delay: 0.7s; }
+          .card-item:nth-child(8) { animation-delay: 0.8s; }
+          .card-item:nth-child(9) { animation-delay: 0.9s; }
+          .card-item:nth-child(10) { animation-delay: 1s; }
+          
+          /* Responsive adjustments */
+          @media (max-width: 360px) {
+            .card-item {
+              min-height: 70px;
+              font-size: 0.875rem;
+            }
+          }
+        `}</style>
       </div>
     </div>
   );
