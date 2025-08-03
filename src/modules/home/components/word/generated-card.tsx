@@ -139,9 +139,9 @@ export default function GeneratedCardPage() {
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-center mb-4 mt-6">
-          <span className="text-[2rem] text-[#a78bfa] mr-2" style={{ fontFamily: 'serif' }}>"</span>
-          <span className="font-bold text-[2rem] text-[#a78bfa] leading-tight">
+        <div className="flex items-center justify-center mb-4 mt-0">
+          <i className="fa-solid fa-quote-left text-3xl text-[#7c3aed] mr-3"></i>
+          <span className="font-bold text-[2rem] text-[#7c3aed] leading-tight">
             2. Choose Your Card
           </span>
         </div>

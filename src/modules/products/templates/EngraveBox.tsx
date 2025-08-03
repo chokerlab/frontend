@@ -2,14 +2,21 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { HttpTypes } from "@medusajs/types";
+import { addToCart } from "@lib/data/cart";
+import { useParams } from "next/navigation";
+import Toast from "@modules/common/components/toast";
 
 type EngraveBoxProps = {
   images: HttpTypes.StoreProductImage[];
   imageUrl?: string;
+  product?: HttpTypes.StoreProduct;
 };
 
-const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
+const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) => {
   const [engraveText, setEngraveText] = useState("");
+  const params = useParams();
+  const countryCode = params.countryCode as string;
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('selectedGeneratedCard');
@@ -20,11 +27,50 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info"; isVisible: boolean }>({
+    message: "",
+    type: "info",
+    isVisible: false,
+  });
 
   const mainImage = images && images.length > 0 ? images[0].url : undefined;
 
+  const handleAddToCart = async () => {
+    if (!product?.variants?.[0]?.id) return;
+    
+    setIsAddingToCart(true);
+    try {
+      await addToCart({
+        variantId: product.variants[0].id,
+        quantity: 1,
+        countryCode,
+      });
+      setToast({
+        message: "Successfully added to cart! 🛒",
+        type: "success",
+        isVisible: true,
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setToast({
+        message: "Failed to add to cart. Please try again.",
+        type: "error",
+        isVisible: true,
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
+      />
       <div className="max-w-[540px] w-full mx-auto">
         {mainImage && (
           <div className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle rounded-2xl mb-6">
@@ -40,8 +86,8 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
       </div>
       <div className="mt-6 w-full max-w-[540px] bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center border border-gray-200">
         <label htmlFor="choker-engrave-text" className="block text-base font-semibold text-gray-800 mb-3 w-full text-left tracking-wide">
-          Preview or play with your text below,<br />
-          then hit the button to see your choker’s new vibe!
+          Play with your text below,<br />
+          And see your choker’s new vibe!
         </label>
         <input
           id="choker-engrave-text"
@@ -155,7 +201,7 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
                   opacity: 0.92,
                   marginBottom: 12
                 }}>
-                  Creating your luxury choker...
+                  Creating your new choker...
                 </div>
               </>
             ) : resultImage ? (
@@ -186,15 +232,52 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl }) => {
                   color: '#3a2e4f',
                   fontSize: window.innerWidth <= 768 ? 22 : 28,
                   fontWeight: 800,
-                  marginBottom: 8,
+                  marginBottom: 16,
                   textAlign: 'center',
                   fontFamily: `'Playfair Display', 'Georgia', 'Times New Roman', serif`,
                   letterSpacing: 0.5,
                   lineHeight: 1.35,
                   textShadow: '0 2px 8px rgba(58,46,79,0.07)'
                 }}>
-                  Try wearing this choker.<br/>Make it yours today!
+                  Make it yours today!
                 </div>
+                <button
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart}
+                  style={{
+                    background: 'linear-gradient(90deg, #a78bfa 0%, #f472b6 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 16,
+                    padding: window.innerWidth <= 768 ? '12px 24px' : '16px 32px',
+                    fontSize: window.innerWidth <= 768 ? 16 : 18,
+                    fontWeight: 600,
+                    cursor: isAddingToCart ? 'not-allowed' : 'pointer',
+                    opacity: isAddingToCart ? 0.7 : 1,
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 16px rgba(167, 139, 250, 0.3)',
+                    minWidth: window.innerWidth <= 768 ? 140 : 160,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isAddingToCart) {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(167, 139, 250, 0.4)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isAddingToCart) {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(167, 139, 250, 0.3)';
+                    }
+                  }}
+                >
+                  <i className="fa-solid fa-cart-plus"></i>
+                  {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                </button>
               </>
             ) : (
               <>
