@@ -24,6 +24,8 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
 }) => {
   const initialImage = thumbnail || images?.[0]?.url
 
+  console.log("tongzhan - 1");
+
   return (
     <Container
       className={clx(

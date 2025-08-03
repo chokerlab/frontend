@@ -35,7 +35,23 @@ export default function PageWords() {
         }),
       });
       const data = await response.json();
-      const textArray = data.message;
+      const textString = data.message;
+      
+      // Parse the string into an array by splitting on numbered lines and removing numbers
+      const textArray = textString
+        .split('\n')
+        .filter((line: string) => line.trim() !== '')
+        .map((line: string) => {
+          // Remove the number and dot at the beginning (e.g., "1. " or "10. ")
+          let cleanedLine = line.replace(/^\d+\.\s*/, '').trim();
+          // Remove outer double quotes if they exist
+          if (cleanedLine.startsWith('"') && cleanedLine.endsWith('"')) {
+            cleanedLine = cleanedLine.slice(1, -1);
+          }
+          return cleanedLine;
+        });
+      
+      console.log("tongzhan - textArray:", textArray);
       dispatch(setCards(textArray));
       router.push(`/${countryCode}/customize/generated-card`);
     } catch (error) {

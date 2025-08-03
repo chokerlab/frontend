@@ -22,7 +22,7 @@ export default function GeneratedCardPage() {
   const generateBackgroundTexts = () => {
     if (!isClient || !cards.length) return null;
 
-    const backgroundTexts: JSX.Element[] = [];
+    const backgroundTexts: React.JSX.Element[] = [];
     const positions = [
       // First row
       { left: '5%', top: '15%', fontSize: '24px', rotation: -8 },
