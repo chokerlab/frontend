@@ -67,6 +67,69 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
           </Text>
         </div>
       </div>
+      
+      {/* Fulfillment Tracking Information */}
+      {(order as any).fulfillments && (order as any).fulfillments.length > 0 && (
+        <>
+          <Divider className="mt-8" />
+          <div className="mt-8">
+            <Text className="txt-medium-plus text-ui-fg-base mb-4">
+              Tracking Information
+            </Text>
+            <div className="space-y-4">
+              {(order as any).fulfillments.map((fulfillment: any, index: number) => (
+                <div key={fulfillment.id || index} className="border rounded-lg p-4">
+                  <Text className="txt-medium text-ui-fg-base mb-2">
+                    Fulfillment {index + 1}
+                  </Text>
+                  {fulfillment.labels && fulfillment.labels.length > 0 ? (
+                    <div className="space-y-3">
+                      {fulfillment.labels.map((label: any, labelIndex: number) => (
+                        <div key={label.id || labelIndex} className="bg-gray-50 rounded p-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <Text className="txt-medium text-ui-fg-subtle mb-1">
+                                Tracking Number
+                              </Text>
+                              <Text className="txt-medium text-ui-fg-base">
+                                {label.tracking_number || 'N/A'}
+                              </Text>
+                            </div>
+                            <div>
+                              <Text className="txt-medium text-ui-fg-subtle mb-1">
+                                Tracking URL
+                              </Text>
+                              {label.tracking_url && label.tracking_url !== "#" ? (
+                                <a 
+                                  href={label.tracking_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="txt-medium text-blue-600 hover:underline"
+                                >
+                                  View Tracking
+                                </a>
+                              ) : (
+                                <Text className="txt-medium text-ui-fg-subtle">
+                                  N/A
+                                </Text>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Text className="txt-medium text-ui-fg-subtle">
+                      No tracking information available
+                    </Text>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+      
       <Divider className="mt-8" />
     </div>
   )
