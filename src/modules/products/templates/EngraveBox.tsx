@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { HttpTypes } from "@medusajs/types";
 import { addToCart } from "@lib/data/cart";
@@ -16,6 +16,12 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
   const [engraveText, setEngraveText] = useState("");
   const params = useParams();
   const countryCode = params.countryCode as string;
+  
+  // 图片轮播状态
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -35,6 +41,51 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
   });
 
   const mainImage = images && images.length > 0 ? images[0].url : undefined;
+
+
+
+  // 触摸事件处理
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && images && images.length > 1) {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }
+    if (isRightSwipe && images && images.length > 1) {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
+  // 键盘导航
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (images && images.length > 1) {
+      if (e.key === 'ArrowLeft') {
+        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+      } else if (e.key === 'ArrowRight') {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      }
+    }
+  }, [images]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const handleAddToCart = async () => {
     if (!product?.variants?.[0]?.id) return;
@@ -63,6 +114,24 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
     }
   };
 
+  const goToImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  const goToPrevious = () => {
+    if (images && images.length > 1) {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
+  };
+
+  const goToNext = () => {
+    if (images && images.length > 1) {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }
+  };
+
+
+
   return (
     <div className="flex flex-col items-center">
       <Toast
@@ -71,23 +140,121 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
         isVisible={toast.isVisible}
         onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
       />
-      <div className="max-w-[540px] w-full mx-auto">
-        {mainImage && (
-          <div className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle rounded-2xl mb-6">
-            <Image
-              src={mainImage}
-              alt="Choker preview"
-              fill
-              className="absolute inset-0 rounded-2xl object-cover"
-              sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
-            />
+      
+      {/* 图片轮播组件 */}
+      {images && images.length > 0 && (
+        <div className="max-w-[540px] w-full mx-auto mb-6">
+          <div 
+            ref={containerRef}
+            className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle rounded-2xl"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* 主图片 */}
+            <div className="relative w-full h-full">
+              <Image
+                src={images[currentImageIndex].url}
+                alt={`Choker preview ${currentImageIndex + 1}`}
+                fill
+                className="absolute inset-0 rounded-2xl object-cover transition-transform duration-300 ease-in-out"
+                sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
+                priority={currentImageIndex <= 2}
+              />
+            </div>
+
+            {/* 导航按钮 */}
+            {images.length > 1 && (
+              <>
+                {/* 上一张按钮 */}
+                <button
+                  onClick={goToPrevious}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* 下一张按钮 */}
+                <button
+                  onClick={goToNext}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                  aria-label="Next image"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* 图片计数器 */}
+                <div className="absolute top-3 right-3 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm backdrop-blur-sm">
+                  {currentImageIndex + 1} / {images.length}
+                </div>
+
+
+              </>
+            )}
+
+            {/* 指示器 */}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToImage(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      index === currentImageIndex 
+                        ? 'bg-white scale-125' 
+                        : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+
+          {/* 缩略图导航 */}
+          {images.length > 1 && (
+            <div className="mt-4 flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+              {images.map((image, index) => (
+                <button
+                  key={image.id || index}
+                  onClick={() => goToImage(index)}
+                  className={`flex-shrink-0 relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                    index === currentImageIndex 
+                      ? 'border-blue-500 scale-105' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                  aria-label={`Thumbnail ${index + 1}`}
+                >
+                  <Image
+                    src={image.url}
+                    alt={`Thumbnail ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                  {index === currentImageIndex && (
+                    <div className="absolute inset-0 bg-blue-500 bg-opacity-20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="mt-6 w-full max-w-[540px] bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center border border-gray-200">
         <label htmlFor="choker-engrave-text" className="block text-base font-semibold text-gray-800 mb-3 w-full text-left tracking-wide">
           Play with your text below,<br />
-          And see your choker’s new vibe!
+          And see your choker's new vibe!
         </label>
         <input
           id="choker-engrave-text"
@@ -305,7 +472,20 @@ if (typeof window !== 'undefined') {
   if (!document.getElementById('modal-spin-keyframes')) {
     const style = document.createElement('style');
     style.id = 'modal-spin-keyframes';
-    style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }`;
+    style.innerHTML = `
+      @keyframes spin { 
+        0% { transform: rotate(0deg);} 
+        100% { transform: rotate(360deg);} 
+      }
+      
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    `;
     document.head.appendChild(style);
   }
 }
