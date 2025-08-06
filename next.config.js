@@ -40,6 +40,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.chokerlab.com",
       },
+      {
+        protocol: "https",
+        hostname: "chokerlab.s3.us-east-2.amazonaws.com",
+      },
     ],
   },
 }
