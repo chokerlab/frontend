@@ -19,7 +19,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    domains: [
+      "localhost",
+      "medusa-public-images.s3.eu-west-1.amazonaws.com",
+      "medusa-server-testing.s3.amazonaws.com",
+      "medusa-server-testing.s3.us-east-1.amazonaws.com",
+      "api.chokerlab.com",
+      "chokerlab.s3.us-east-2.amazonaws.com",
+    ],
     remotePatterns: [
       {
         protocol: "http",
