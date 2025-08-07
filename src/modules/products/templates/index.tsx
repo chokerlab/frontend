@@ -1,6 +1,5 @@
 import React, { Suspense } from "react"
 
-import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
@@ -10,7 +9,7 @@ import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-relat
 import { notFound } from "next/navigation"
 import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
-import EngraveBox from "./EngraveBox"
+import EngraveBoxWrapper from "./EngraveBoxWrapper"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
@@ -39,7 +38,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         </div>
         <div className="block w-full relative flex flex-col items-center">
           <div className="max-w-[400px] w-full mx-auto">
-            <EngraveBox images={product?.images || []} imageUrl={product?.images?.[0]?.url} product={product} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <EngraveBoxWrapper product={product} />
+            </Suspense>
           </div>
         </div>
         <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">

@@ -40,7 +40,6 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
     isVisible: false,
   });
 
-  const mainImage = images && images.length > 0 ? images[0].url : undefined;
 
 
 

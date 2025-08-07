@@ -40,6 +40,14 @@ export default function ProductActions({
     if (product.variants?.length === 1) {
       const variantOptions = optionsAsKeymap(product.variants[0].options)
       setOptions(variantOptions ?? {})
+      
+      // Emit initial variant change event
+      if (typeof window !== 'undefined' && variantOptions) {
+        const event = new CustomEvent('variantChanged', {
+          detail: { options: variantOptions }
+        });
+        window.dispatchEvent(event);
+      }
     }
   }, [product.variants])
 
@@ -56,10 +64,19 @@ export default function ProductActions({
 
   // update the options when a variant is selected
   const setOptionValue = (optionId: string, value: string) => {
-    setOptions((prev) => ({
-      ...prev,
+    const newOptions = {
+      ...options,
       [optionId]: value,
-    }))
+    };
+    setOptions(newOptions);
+    
+    // Emit custom event to notify other components about variant change
+    if (typeof window !== 'undefined') {
+      const event = new CustomEvent('variantChanged', {
+        detail: { options: newOptions }
+      });
+      window.dispatchEvent(event);
+    }
   }
 
   //check if the selected options produce a valid variant

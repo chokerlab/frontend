@@ -36,7 +36,7 @@ export default function PageWords() {
       });
       const data = await response.json();
       const textString = data.message;
-      
+
       // Parse the string into an array by splitting on numbered lines and removing numbers
       const textArray = textString
         .split('\n')
@@ -50,8 +50,7 @@ export default function PageWords() {
           }
           return cleanedLine;
         });
-      
-      console.log("tongzhan - textArray:", textArray);
+
       dispatch(setCards(textArray));
       router.push(`/${countryCode}/customize/generated-card`);
     } catch (error) {
@@ -102,4 +101,4 @@ export default function PageWords() {
       </button>
     </div>
   );
-} 
+}
