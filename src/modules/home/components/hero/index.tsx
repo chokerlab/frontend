@@ -236,11 +236,13 @@ const Hero = () => {
             <div className="w-full flex flex-col items-center justify-center py-24 min-h-[80vh]">
               <div className="flex flex-col items-center justify-center px-8 py-12 rounded-3xl shadow-xl bg-white bg-opacity-80" style={{ maxWidth: 480, width: '100%' }}>
                 <img src="https://raw.githubusercontent.com/chokerlab/frontend/refs/heads/main/src/image/logo/no_background.jpg" alt="ChokerLab Logo" className="w-32 h-32 object-contain rounded-full mb-8" />
-                <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-center bg-gradient-to-r from-purple-500 via-pink-400 to-pink-500 bg-clip-text text-transparent">
-                  Make Your Statement. Wear Your Story.
+                <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-center bg-gradient-to-r from-purple-500 via-pink-400 to-pink-500 bg-clip-text text-transparent leading-tight">
+                  Make Your Statement.<br className="block md:hidden" />
+                  <span className="hidden md:inline"> </span>Wear Your Story.
                 </h1>
-                <p className="text-lg md:text-xl mb-10 text-center max-w-xl text-gray-400">
-                  Design a choker that's as bold as you are — powered by AI, engraved with your vibe, and made for your style.
+                <p className="text-lg md:text-xl mb-10 text-center max-w-xl text-gray-400 leading-relaxed">
+                  Craft your unique choker<br />
+                  with AI-powered personalization.
                 </p>
                 <button
                   onClick={handleDesignNowClick}
