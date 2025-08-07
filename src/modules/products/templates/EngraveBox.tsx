@@ -13,16 +13,19 @@ type EngraveBoxProps = {
 };
 
 const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) => {
+  console.log('EngraveBox received images:', images);
+  console.log('EngraveBox received imageUrl:', imageUrl);
+  console.log('EngraveBox images length:', images?.length);
+
   const [engraveText, setEngraveText] = useState("");
   const params = useParams();
   const countryCode = params.countryCode as string;
-  
-  // 图片轮播状态
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('selectedGeneratedCard');
@@ -54,7 +57,7 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
 
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -88,7 +91,7 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
 
   const handleAddToCart = async () => {
     if (!product?.variants?.[0]?.id) return;
-    
+
     setIsAddingToCart(true);
     try {
       await addToCart({
@@ -139,11 +142,20 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
         isVisible={toast.isVisible}
         onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
       />
-      
       {/* 图片轮播组件 */}
-      {images && images.length > 0 && (
+      {(() => {
+        console.log('Render condition check:');
+        console.log('images:', images);
+        console.log('images.length > 0:', images && images.length > 0);
+        console.log('currentImageIndex:', currentImageIndex);
+        console.log('images[currentImageIndex]:', images && images[currentImageIndex]);
+        console.log('images[currentImageIndex]?.url:', images && images[currentImageIndex]?.url);
+        console.log('Final condition result:', images && images.length > 0 && images[currentImageIndex]?.url);
+        return null;
+      })()}
+      {images && images.length > 0 && images[currentImageIndex]?.url && (
         <div className="max-w-[540px] w-full mx-auto mb-6">
-          <div 
+          <div
             ref={containerRef}
             className="relative aspect-[29/34] w-full overflow-hidden bg-ui-bg-subtle rounded-2xl"
             onTouchStart={handleTouchStart}
@@ -204,8 +216,8 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
                     key={index}
                     onClick={() => goToImage(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                      index === currentImageIndex 
-                        ? 'bg-white scale-125' 
+                      index === currentImageIndex
+                        ? 'bg-white scale-125'
                         : 'bg-white bg-opacity-50 hover:bg-opacity-75'
                     }`}
                     aria-label={`Go to image ${index + 1}`}
@@ -214,17 +226,16 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
               </div>
             )}
           </div>
-
           {/* 缩略图导航 */}
           {images.length > 1 && (
             <div className="mt-4 flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-              {images.map((image, index) => (
+              {images.filter(image => image.url).map((image, index) => (
                 <button
                   key={image.id || index}
                   onClick={() => goToImage(index)}
                   className={`flex-shrink-0 relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                    index === currentImageIndex 
-                      ? 'border-blue-500 scale-105' 
+                    index === currentImageIndex
+                      ? 'border-blue-500 scale-105'
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                   aria-label={`Thumbnail ${index + 1}`}
@@ -472,11 +483,11 @@ if (typeof window !== 'undefined') {
     const style = document.createElement('style');
     style.id = 'modal-spin-keyframes';
     style.innerHTML = `
-      @keyframes spin { 
-        0% { transform: rotate(0deg);} 
-        100% { transform: rotate(360deg);} 
+      @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
       }
-      
+
       .scrollbar-hide {
         -ms-overflow-style: none;
         scrollbar-width: none;
@@ -489,4 +500,4 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export default EngraveBox; 
+export default EngraveBox;
