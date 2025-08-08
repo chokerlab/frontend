@@ -28,7 +28,7 @@ export default async function LatestDrops({
     <div className="content-container py-12 small:py-24">
       <div className="flex justify-between items-center mb-8">
         <Text className="txt-xlarge font-bold text-[#7c3aed]">Latest Drops</Text>
-        <InteractiveLink href={`/${region.currency_code.toLowerCase()}/store`}>
+        <InteractiveLink href="/store">
           View all
         </InteractiveLink>
       </div>

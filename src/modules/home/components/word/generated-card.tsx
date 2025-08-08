@@ -197,7 +197,7 @@ export default function GeneratedCardPage() {
                 router.push(`/${countryCode}/store`)
               }}
             >
-              <i className="fa-solid fa-gem"></i> Continue
+              <i className="fa-solid fa-gem"></i> Select Your Choker
             </button>
           </div>
         </div>

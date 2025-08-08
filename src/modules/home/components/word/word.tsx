@@ -85,7 +85,7 @@ export default function PageWords() {
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter your custom text..."
+          placeholder="Enter your text..."
           className="w-full pl-11 pr-4 py-3 rounded-lg bg-[#f9fafb] text-gray-800 text-base border-2 border-[#e5e7eb] focus:border-[#a78bfa] focus:shadow-lg outline-none transition-all"
           style={{ boxShadow: '0 2px 8px rgba(124,58,237,0.03)' }}
         />
@@ -96,7 +96,7 @@ export default function PageWords() {
         disabled={!selectedWord || !userInput}
         onClick={handleGenerate}
       >
-        <i className="fa-solid fa-wand-magic-sparkles"></i> Generate My Choker Text
+        <i className="fa-solid fa-wand-magic-sparkles"></i> Generate My Choker Words
       </button>
     </div>
   );
