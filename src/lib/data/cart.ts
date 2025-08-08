@@ -124,6 +124,19 @@ export async function addToCart({
     throw new Error("Missing variant ID when adding to cart")
   }
 
+  // Check cart status before adding to cart
+  try {
+    const response = await fetch('/api/cart-status')
+    if (response.ok) {
+      const data = await response.json()
+      if (!data.cartEnabled) {
+        throw new Error("Cart is currently disabled. Please try again later.")
+      }
+    }
+  } catch (error) {
+    // If we can't check the status, allow the operation to proceed
+  }
+
   const cart = await getOrSetCart(countryCode)
 
   if (!cart) {

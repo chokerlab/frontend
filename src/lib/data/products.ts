@@ -86,8 +86,6 @@ export const listProducts = async ({
       }
     })
     .catch((error) => {
-      console.error("=== listProducts API Error===")
-      console.error("Error:", error)
       throw error
     })
 }

@@ -3,6 +3,7 @@ import { Button, clx } from "@medusajs/ui"
 import React, { Fragment, useMemo } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
+import { useCartStatus } from "@lib/hooks/use-cart-status"
 import ChevronDown from "@modules/common/icons/chevron-down"
 import X from "@modules/common/icons/x"
 
@@ -34,6 +35,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
   show,
   optionsDisabled,
 }) => {
+  const { cartEnabled } = useCartStatus()
   const { state, open, close } = useToggleState()
 
   const price = getProductPrice({
@@ -118,13 +120,15 @@ const MobileActions: React.FC<MobileActionsProps> = ({
               </Button>}
               <Button
                 onClick={handleAddToCart}
-                disabled={!inStock || !variant}
+                disabled={!inStock || !variant || !cartEnabled}
                 className="w-full"
                 isLoading={isAdding}
                 data-testid="mobile-cart-button"
               >
                 {!variant
                   ? "Select variant"
+                  : !cartEnabled
+                  ? "Out of Stock"
                   : !inStock
                   ? "Out of stock"
                   : "Add to cart"}

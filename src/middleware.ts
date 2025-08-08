@@ -5,8 +5,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
-console.log("NEXT_PUBLIC_MEDUSA_BACKEND_URL:", process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL)
-console.log("NEXT_PUBLIC_DEFAULT_REGION:", process.env.NEXT_PUBLIC_DEFAULT_REGION)
+
 
 const regionMapCache = {
   regionMap: new Map<string, HttpTypes.StoreRegion>(),
@@ -95,11 +94,7 @@ async function getCountryCode(
 
     return countryCode
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error(
-        "Middleware.ts: Error getting the country code. Did you set up regions in your Medusa Admin and define a NEXT_PUBLIC_MEDUSA_BACKEND_URL environment variable? Note that the variable is no longer named NEXT_PUBLIC_NEXT_PUBLIC_MEDUSA_BACKEND_URL."
-      )
-    }
+
   }
 }
 

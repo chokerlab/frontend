@@ -2,6 +2,7 @@
 
 import { addToCart } from "@lib/data/cart"
 import { useIntersection } from "@lib/hooks/use-in-view"
+import { useCartStatus } from "@lib/hooks/use-cart-status"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
@@ -34,6 +35,7 @@ export default function ProductActions({
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
+  const { cartEnabled } = useCartStatus()
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
@@ -164,7 +166,8 @@ export default function ProductActions({
             !selectedVariant ||
             !!disabled ||
             isAdding ||
-            !isValidVariant
+            !isValidVariant ||
+            !cartEnabled
           }
           variant="primary"
           className="w-full h-10"
@@ -173,6 +176,8 @@ export default function ProductActions({
         >
           {!selectedVariant && !options
             ? "Select variant"
+            : !cartEnabled
+            ? "Out of Stock"
             : !inStock || !isValidVariant
             ? "Out of stock"
             : "Add to cart"}

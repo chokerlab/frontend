@@ -4,6 +4,7 @@ import Image from "next/image";
 import { HttpTypes } from "@medusajs/types";
 import { addToCart } from "@lib/data/cart";
 import { useParams } from "next/navigation";
+import { useCartStatus } from "@lib/hooks/use-cart-status";
 import Toast from "@modules/common/components/toast";
 
 type EngraveBoxProps = {
@@ -13,13 +14,12 @@ type EngraveBoxProps = {
 };
 
 const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) => {
-  console.log('EngraveBox received images:', images);
-  console.log('EngraveBox received imageUrl:', imageUrl);
-  console.log('EngraveBox images length:', images?.length);
+
 
   const [engraveText, setEngraveText] = useState("");
   const params = useParams();
   const countryCode = params.countryCode as string;
+  const { cartEnabled } = useCartStatus();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
@@ -105,7 +105,6 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
         isVisible: true,
       });
     } catch (error) {
-      console.error("Error adding to cart:", error);
       setToast({
         message: "Failed to add to cart. Please try again.",
         type: "error",
@@ -143,16 +142,6 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
         onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
       />
       {/* 图片轮播组件 */}
-      {(() => {
-        console.log('Render condition check:');
-        console.log('images:', images);
-        console.log('images.length > 0:', images && images.length > 0);
-        console.log('currentImageIndex:', currentImageIndex);
-        console.log('images[currentImageIndex]:', images && images[currentImageIndex]);
-        console.log('images[currentImageIndex]?.url:', images && images[currentImageIndex]?.url);
-        console.log('Final condition result:', images && images.length > 0 && images[currentImageIndex]?.url);
-        return null;
-      })()}
       {images && images.length > 0 && images[currentImageIndex]?.url && (
         <div className="max-w-[540px] w-full mx-auto mb-6">
           <div
@@ -420,19 +409,19 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
                 </div>
                 <button
                   onClick={handleAddToCart}
-                  disabled={isAddingToCart}
+                  disabled={isAddingToCart || !cartEnabled}
                   style={{
-                    background: 'linear-gradient(90deg, #a78bfa 0%, #f472b6 100%)',
+                    background: !cartEnabled ? '#ccc' : 'linear-gradient(90deg, #a78bfa 0%, #f472b6 100%)',
                     color: 'white',
                     border: 'none',
                     borderRadius: 16,
                     padding: window.innerWidth <= 768 ? '12px 24px' : '16px 32px',
                     fontSize: window.innerWidth <= 768 ? 16 : 18,
                     fontWeight: 600,
-                    cursor: isAddingToCart ? 'not-allowed' : 'pointer',
-                    opacity: isAddingToCart ? 0.7 : 1,
+                    cursor: (isAddingToCart || !cartEnabled) ? 'not-allowed' : 'pointer',
+                    opacity: (isAddingToCart || !cartEnabled) ? 0.7 : 1,
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 16px rgba(167, 139, 250, 0.3)',
+                    boxShadow: !cartEnabled ? 'none' : '0 4px 16px rgba(167, 139, 250, 0.3)',
                     minWidth: window.innerWidth <= 768 ? 140 : 160,
                     display: 'flex',
                     alignItems: 'center',
@@ -440,20 +429,20 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
                     gap: '8px',
                   }}
                   onMouseEnter={(e) => {
-                    if (!isAddingToCart) {
+                    if (!isAddingToCart && cartEnabled) {
                       e.currentTarget.style.transform = 'translateY(-2px)';
                       e.currentTarget.style.boxShadow = '0 6px 20px rgba(167, 139, 250, 0.4)';
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (!isAddingToCart) {
+                    if (!isAddingToCart && cartEnabled) {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = '0 4px 16px rgba(167, 139, 250, 0.3)';
                     }
                   }}
                 >
                   <i className="fa-solid fa-cart-plus"></i>
-                  {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                  {isAddingToCart ? 'Adding...' : !cartEnabled ? 'Out of Stock' : 'Add to Cart'}
                 </button>
               </>
             ) : (

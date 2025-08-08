@@ -54,7 +54,6 @@ export default function PageWords() {
       dispatch(setCards(textArray));
       router.push(`/${countryCode}/customize/generated-card`);
     } catch (error) {
-      console.error("Error generating text:", error);
     }
   };
 

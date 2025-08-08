@@ -42,12 +42,11 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
   }, [product.variants, selectedOptions]);
   // Get images to display - either variant images from metadata or product images
   const imagesToDisplay = useMemo(() => {
-    console.log('Selected variant:', selectedVariant);
-    console.log('Variant metadata:', selectedVariant?.metadata);
+
 
     // If we have a selected variant and it has images in metadata, use those
     if (selectedVariant?.metadata?.images && Array.isArray(selectedVariant.metadata.images) && selectedVariant.metadata.images.length > 0) {
-      console.log('Using variant images from metadata:', selectedVariant.metadata.images);
+
       // Convert metadata images to the expected format
       // The images are objects with url property: { url: "..." }
       return selectedVariant.metadata.images
@@ -65,7 +64,7 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
 
     // If variant has a thumbnail in metadata, use that
     if (selectedVariant?.metadata?.thumbnail && typeof selectedVariant.metadata.thumbnail === 'string' && selectedVariant.metadata.thumbnail.trim() !== '') {
-      console.log('Using variant thumbnail from metadata:', selectedVariant.metadata.thumbnail);
+
       return [{
         id: `variant-${selectedVariant.id}-thumbnail`,
         url: selectedVariant.metadata.thumbnail,
@@ -77,7 +76,7 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
       }];
     }
 
-    console.log('Falling back to product images:', product.images);
+    
     // Otherwise, fall back to product images (also filter out empty URLs)
     return (product.images || []).filter(image => image.url && image.url.trim() !== '');
   }, [selectedVariant, product.images]);
@@ -85,7 +84,7 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
   // Get the main image URL for the image generation
   const mainImageUrl = useMemo(() => {
     const url = imagesToDisplay.length > 0 ? imagesToDisplay[0].url : undefined;
-    console.log('Main image URL:', url);
+
     return url;
   }, [imagesToDisplay]);
 
@@ -94,7 +93,7 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
     const handleVariantChange = (event: CustomEvent) => {
       const { options } = event.detail;
       setSelectedOptions(options);
-      console.log('Variant changed:', options);
+  
     };
 
     window.addEventListener('variantChanged', handleVariantChange as EventListener);
@@ -104,8 +103,7 @@ const EngraveBoxWrapper: React.FC<EngraveBoxWrapperProps> = ({ product }) => {
     };
   }, []);
 
-  console.log('Images to display:', imagesToDisplay);
-  console.log('Images to display length:', imagesToDisplay.length);
+  
 
   return (
     <EngraveBox
