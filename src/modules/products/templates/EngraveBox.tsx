@@ -456,6 +456,8 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
                   fontFamily: 'inherit',
                 }}>
                   Failed to generate image.
+                  <br />
+                  Please try again~
                 </div>
               </>
             )}
