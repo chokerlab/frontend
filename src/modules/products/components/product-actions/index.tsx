@@ -37,19 +37,26 @@ export default function ProductActions({
   const countryCode = useParams().countryCode as string
   const { cartEnabled } = useCartStatus()
 
-  // If there is only 1 variant, preselect the options
+  // On initial load, preselect the first variant
   useEffect(() => {
-    if (product.variants?.length === 1) {
-      const variantOptions = optionsAsKeymap(product.variants[0].options)
-      setOptions(variantOptions ?? {})
-      
-      // Emit initial variant change event
-      if (typeof window !== 'undefined' && variantOptions) {
-        const event = new CustomEvent('variantChanged', {
-          detail: { options: variantOptions }
-        });
-        window.dispatchEvent(event);
-      }
+    const variants = product.variants ?? []
+    if (variants.length === 0) return
+
+    // Do not override if we already have a selection
+    if (Object.keys(options).length > 0) return
+
+    // Always choose the first variant in the list
+    const chosen = variants[0]
+
+    const variantOptions = optionsAsKeymap(chosen.options)
+    setOptions(variantOptions ?? {})
+
+    // Emit initial variant change event
+    if (typeof window !== 'undefined' && variantOptions) {
+      const event = new CustomEvent('variantChanged', {
+        detail: { options: variantOptions }
+      });
+      window.dispatchEvent(event);
     }
   }, [product.variants])
 
