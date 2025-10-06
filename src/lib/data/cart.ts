@@ -151,6 +151,9 @@ export async function addToCart({
     ...(await getAuthHeaders()),
   }
 
+  console.log("tongzhan - customText", customText)
+
+  // Add the line item with metadata
   await sdk.store.cart
     .createLineItem(
       cart.id,
@@ -170,6 +173,27 @@ export async function addToCart({
       revalidateTag(fulfillmentCacheTag)
     })
     .catch(medusaError)
+
+  // Also update cart metadata with custom text if provided
+  if (customText) {
+    await sdk.store.cart
+      .update(
+        cart.id,
+        {
+          metadata: {
+            ...cart.metadata,
+            custom_text: customText
+          }
+        },
+        {},
+        headers
+      )
+      .then(async () => {
+        const cartCacheTag = await getCacheTag("carts")
+        revalidateTag(cartCacheTag)
+      })
+      .catch(medusaError)
+  }
 }
 
 export async function updateLineItem({
