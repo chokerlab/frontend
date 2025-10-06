@@ -21,8 +21,6 @@ export const useOrderCount = () => {
         const response = await fetch('/api/order-count')
         const data: OrderCountResponse = await response.json()
         
-        console.log('Order count response:', data); // Debug log
-        
         if (data.success) {
           setOrderCount(data.total_orders)
         } else {

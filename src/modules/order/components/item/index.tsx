@@ -28,6 +28,14 @@ const Item = ({ item, currencyCode }: ItemProps) => {
           {item.product_title}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        {item.metadata && typeof item.metadata === 'object' && 'custom_text' in item.metadata && (
+          <Text
+            className="txt-small text-ui-fg-muted mt-1"
+            data-testid="custom-text"
+          >
+            Custom Text: "{String(item.metadata.custom_text)}"
+          </Text>
+        )}
       </Table.Cell>
 
       <Table.Cell className="!pr-0">

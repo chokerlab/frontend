@@ -115,11 +115,15 @@ export async function addToCart({
   variantId,
   quantity,
   countryCode,
+  customText,
 }: {
   variantId: string
   quantity: number
   countryCode: string
+  customText?: string
 }) {
+  console.log("addToCart called with customText:", customText)
+  
   if (!variantId) {
     throw new Error("Missing variant ID when adding to cart")
   }
@@ -153,6 +157,7 @@ export async function addToCart({
       {
         variant_id: variantId,
         quantity,
+        metadata: customText ? { custom_text: customText } : undefined,
       },
       {},
       headers
