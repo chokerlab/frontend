@@ -130,10 +130,16 @@ export default function ProductActions({
 
     setIsAdding(true)
 
+    // Get the current text from the input field in EngraveBox component
+    const customText = typeof window !== 'undefined' 
+      ? (document.getElementById('choker-engrave-text') as HTMLInputElement)?.value || ''
+      : ''
+
     await addToCart({
       variantId: selectedVariant.id,
       quantity: 1,
       countryCode,
+      customText,
     })
 
     setIsAdding(false)

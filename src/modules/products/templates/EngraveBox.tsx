@@ -92,12 +92,14 @@ const EngraveBox: React.FC<EngraveBoxProps> = ({ images, imageUrl, product }) =>
   const handleAddToCart = async () => {
     if (!product?.variants?.[0]?.id) return;
 
+    console.log("EngraveBox handleAddToCart called with engraveText:", engraveText);
     setIsAddingToCart(true);
     try {
       await addToCart({
         variantId: product.variants[0].id,
         quantity: 1,
         countryCode,
+        customText: engraveText,
       });
       setToast({
         message: "Successfully added to cart! 🛒",

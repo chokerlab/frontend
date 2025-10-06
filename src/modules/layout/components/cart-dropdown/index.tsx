@@ -147,6 +147,14 @@ const CartDropdown = ({
                                   data-testid="cart-item-variant"
                                   data-value={item.variant}
                                 />
+                                {item.metadata && typeof item.metadata === 'object' && 'custom_text' in item.metadata && (
+                                  <span
+                                    className="text-xs text-ui-fg-muted mt-1"
+                                    data-testid="cart-item-custom-text"
+                                  >
+                                    Custom Text: "{String(item.metadata.custom_text)}"
+                                  </span>
+                                )}
                                 <span
                                   data-testid="cart-item-quantity"
                                   data-value={item.quantity}
